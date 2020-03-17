@@ -3,10 +3,22 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useEventCallback from '../utils/useEventCallback';
 
+/**
+ * 强化在浏览器上使用 React.useLayoutEffect
+ * @see useEventCallback 代码中关于 React.useEffect : React.useLayoutEffect 的两种方式的区别
+ */
 const useEnhancedEffect = typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
 
 /**
+ * 波纹特效
+ * 就是
+ * @see Material Design Ripple Button https://blog.csdn.net/wanglei20116527/article/details/51233092
  * @ignore - internal component.
+ * 
+ * 实现原理：
+ * 原理很简单，就是在点击的位置添加一个圆形的span。开始的时候这个span的半径为0，透明度为1。然后慢慢的我们扩大圆形span的半径，减小透明度。
+ * 最后等到圆形span的透明度为0的时候，我们再将添加的span移除就可以了。
+ * 
  */
 function Ripple(props) {
   const {
@@ -21,6 +33,7 @@ function Ripple(props) {
   } = props;
   const [leaving, setLeaving] = React.useState(false);
 
+  // 通过class来处理波纹控件的样式
   const rippleClassName = clsx(classes.ripple, classes.rippleVisible, {
     [classes.ripplePulsate]: pulsate,
   });
